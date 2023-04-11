@@ -1,0 +1,17 @@
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  const socket = io('http://localhost:8000');
+  
+  socket.on('connect',() => {
+    console.log(socket.id);
+    socket.on('messageFromServer',(data) => {
+    console.log(data);
+    })
+    socket.emit('messageFromClient', { data: 'Hello, from the browser!' })
+  })
+  
+  
+</script>
