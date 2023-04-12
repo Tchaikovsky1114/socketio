@@ -5,7 +5,11 @@
 const userName = "Rob";
 const password = "1234"
 
+
+// always join the main namespace, because that's where the client get's the other namespace from
 const socket = io('http://localhost:9000');
+
+
 
 socket.on('connect', () => {
   console.log('Connected!')
@@ -15,12 +19,14 @@ socket.on('connect', () => {
 socket.on('nsList',(nsData) => {
   const lastNs = localStorage.getItem('lastNs');
 
-  console.log(nsData);
   const nameSpacesDiv = document.querySelector('.namespaces');
   nameSpacesDiv.innerHTML = "";
+  
   nsData.forEach(ns => {
     // update the HTML each namespaces
     nameSpacesDiv.innerHTML += `<div class="namespace" ns="${ns.endpoint}"><img src="${ns.image}"></div>`
+    // join this namespace with io()
+    io(`http://localhost:9000${ns.endpoint}`)
   })
 
   Array.from(document.getElementsByClassName('namespace')).forEach(element => {

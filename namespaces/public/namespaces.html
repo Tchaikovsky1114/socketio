@@ -42,6 +42,10 @@
   const socket = io('http://localhost:8001');
   const adminSocket = io('http://localhost:8001/admin');
   
+  socket.on('welcomeToChatRoom',(data) => {
+    console.log('welcome to the main chat room');
+  })
+
   socket.on('connect', () => {
     // do connect type stuff
     console.log("Successfully joined the main ns");

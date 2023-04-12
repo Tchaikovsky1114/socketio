@@ -8,7 +8,8 @@ const io = socketio(expressServer);
 
 // default namespace = .of("/")
 io.on('connection', (socket) => {
-
+  socket.join('chat');
+  io.of('/').to('chat').emit('welcomeToChatRoom',{});
   // mainspace에 유저가 접속했음을 admin namespace에 전달할 수 있다.
   io.of("/admin").emit("userJoinedMainNs", () => {console.log(socket.id,"has joined main namespace.")})
   socket.on('newMessageToServer',(dataFromClient) => {
