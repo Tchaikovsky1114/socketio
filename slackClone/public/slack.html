@@ -7,10 +7,10 @@
         </div>
         <div class="col-sm-2 rooms">
             <h3>Rooms</h3>
-            <ul class="room-list">
-                <li onclick="joinRoom(1,2)"><span class="glyphicon glyphicon-lock"></span>Main Room</li>
-                <li onclick="joinRoom(2,1)"><span class="glyphicon glyphicon-globe"></span>Meeting Room</li>
-            </ul>
+            <h6> <span class="glyphicon glyphicon-globe"></span> Main Room</h6>
+            <ul class="room-list"></ul>
+            <h6 ><span class="glyphicon glyphicon-lock"></span> Meeting Room</h6>
+            
         </div>
         <div class="chat-panel col-sm-9">
             <div class="room-header row col-6">
@@ -75,4 +75,5 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="/joinNs.js"></script>
 <script src="/scripts.js"></script>
