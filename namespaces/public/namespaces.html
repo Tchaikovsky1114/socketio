@@ -40,14 +40,20 @@
 
 <script>
   const socket = io('http://localhost:8001');
+  const adminSocket = io('http://localhost:8001/admin');
   
   socket.on('connect', () => {
     // do connect type stuff
+    console.log("Successfully joined the main ns");
   })
   
   socket.on('messageFromServer',(dataFromServer) => {
     console.log(socket.id);
     console.log(dataFromServer);
+  })
+
+  adminSocket.on("connect", () => {
+    console.log("Successfully joined the admin ns");
   })
   
   socket.on('newMessageToClients',(data) => {
