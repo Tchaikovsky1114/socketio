@@ -10,6 +10,25 @@ const password = "1234"
 const socket = io('http://localhost:9000');
 
 
+const nameSpaceSockets = [];
+const listeners = {
+  nsChange: [],
+  newChat: [],
+  adminNotice: [],
+}
+
+const addListener = (nsId) => {
+  if(!listeners.nsChange[nsId]) {
+    nameSpaceSockets[nsId].on('nsChange',(data) => {
+      console.log('Namespace Changed');
+      console.log(data);
+    })
+    listeners.nsChange[nsId] = true;
+  } else {
+    // nothing to do the listeners has been added
+  }
+  
+}    
 
 socket.on('connect', () => {
   console.log('Connected!')
@@ -25,8 +44,16 @@ socket.on('nsList',(nsData) => {
   nsData.forEach(ns => {
     // update the HTML each namespaces
     nameSpacesDiv.innerHTML += `<div class="namespace" ns="${ns.endpoint}"><img src="${ns.image}"></div>`
-    // join this namespace with io()
-    io(`http://localhost:9000${ns.endpoint}`)
+
+    //initialize thisNs as its index in nameSpaceSockets.
+    // if the connection is new, this will be null
+    // if the connection has already been extablished, it will reconnect and remain in its spot
+    if(!nameSpaceSockets[ns.id]) {
+      // There is no socket at this nsId. so make a new connection.
+      // join this namespace with io()
+      nameSpaceSockets[ns.id] = io(`http://localhost:9000${ns.endpoint}`);
+    }
+    addListener(ns.id);
   })
 
   Array.from(document.getElementsByClassName('namespace')).forEach(element => {
