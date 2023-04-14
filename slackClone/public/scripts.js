@@ -11,10 +11,11 @@ const socket = io('http://localhost:9000');
 
 
 const nameSpaceSockets = [];
+
+
 const listeners = {
   nsChange: [],
-  newChat: [],
-  adminNotice: [],
+  messageToRoom: [],
 }
 
 // a global variable we can update when the user clicks on a namespace
@@ -35,17 +36,24 @@ let selectedNsId = 0;
     })
   })
 
+  
+  // addListener is to manage all listeners added to all namespaces.
+  // this prevents listeners being added multiple time.
 const addListener = (nsId) => {
+
   if(!listeners.nsChange[nsId]) {
     nameSpaceSockets[nsId].on('nsChange',(data) => {
       console.log('Namespace Changed');
       console.log(data);
     })
     listeners.nsChange[nsId] = true;
-  } else {
-    // nothing to do the listeners has been added
   }
   
+    // add the nsId listener to this namespace
+    nameSpaceSockets[nsId].on('messageToRoom',messageObj => {
+      console.log(messageObj);
+    })
+    listeners.messageToRoom[nsId] = true;
 }    
 
 socket.on('connect', () => {
