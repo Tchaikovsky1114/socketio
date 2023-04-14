@@ -17,6 +17,24 @@ const listeners = {
   adminNotice: [],
 }
 
+// a global variable we can update when the user clicks on a namespace
+// we will use it to broadcast across the app (redux would be great here...)
+let selectedNsId = 0;
+
+  // add a submit handler for out form
+  document.querySelector('#message-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    //grab the value from the input box
+    const newMessage = document.querySelector('#user-message').value
+    console.log(newMessage,selectedNsId);
+    nameSpaceSockets[selectedNsId].emit('newMessageToRoom',{
+      newMessage,
+      date: Date.now(),
+      avatar: 'https://via.placeholder.com/30',
+      userName,
+    })
+  })
+
 const addListener = (nsId) => {
   if(!listeners.nsChange[nsId]) {
     nameSpaceSockets[nsId].on('nsChange',(data) => {
@@ -35,6 +53,8 @@ socket.on('connect', () => {
   socket.emit('clientConnect');
 })
 
+
+
 socket.on('nsList',(nsData) => {
   const lastNs = localStorage.getItem('lastNs');
 
@@ -45,7 +65,6 @@ socket.on('nsList',(nsData) => {
     // update the HTML each namespaces
     nameSpacesDiv.innerHTML += `<div class="namespace" ns="${ns.endpoint}"><img src="${ns.image}"></div>`
 
-    //initialize thisNs as its index in nameSpaceSockets.
     // if the connection is new, this will be null
     // if the connection has already been extablished, it will reconnect and remain in its spot
     if(!nameSpaceSockets[ns.id]) {
