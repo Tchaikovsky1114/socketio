@@ -27,13 +27,15 @@ let selectedNsId = 0;
     e.preventDefault();
     //grab the value from the input box
     const newMessage = document.querySelector('#user-message').value
-    console.log(newMessage,selectedNsId);
+
     nameSpaceSockets[selectedNsId].emit('newMessageToRoom',{
       newMessage,
       date: Date.now(),
       avatar: 'https://via.placeholder.com/30',
       userName,
+      selectedNsId,
     })
+    document.querySelector('#user-message').value = '';
   })
 
   
@@ -48,12 +50,15 @@ const addListener = (nsId) => {
     })
     listeners.nsChange[nsId] = true;
   }
-  
+
+  if(!listeners.messageToRoom[nsId]) {
     // add the nsId listener to this namespace
     nameSpaceSockets[nsId].on('messageToRoom',messageObj => {
       console.log(messageObj);
+      document.querySelector('#messages').innerHTML += buildMessageHtml(messageObj);
     })
     listeners.messageToRoom[nsId] = true;
+  }
 }    
 
 socket.on('connect', () => {
@@ -92,3 +97,5 @@ socket.on('nsList',(nsData) => {
   // if lastNs is set, grab that element instead of 0
   joinNs(document.getElementsByClassName('namespace')[0], nsData);
 })
+
+
