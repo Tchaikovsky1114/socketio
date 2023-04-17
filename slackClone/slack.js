@@ -16,8 +16,24 @@ app.get('/change-ns', (req,res) => {
   res.json(namespaces[0]);
 })
 
+io.use((socket,next) => {
+  const jwt = socket.handshake.query.jwt;
+  
+  if(jwt) {
+    console.log(jwt);
+    next()
+  } else {
+    console.log('Authorization Error'); 
+    socket.disconnect();
+  }
+})
+
 io.on('connection', (socket) => {  
-  socket.emit('nsList',namespaces)
+  // console.log('=============================')
+  // console.log(socket.handshake);
+  const jwt = socket.handshake.query.jwt;
+
+  socket.emit('nsList',namespaces);
 });
 
 namespaces.forEach((namespace) => {

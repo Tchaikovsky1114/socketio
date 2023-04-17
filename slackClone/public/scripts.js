@@ -5,9 +5,17 @@
 const userName = "Rob";
 const password = "1234"
 
+const clientOptions = {
+  query: {
+    jwt: '1234'
+  },
+  auth: {
+    userName,password
+  }
+}
 
 // always join the main namespace, because that's where the client get's the other namespace from
-const socket = io('http://localhost:9000');
+const socket = io('http://localhost:9000',clientOptions);
 
 
 const nameSpaceSockets = [];
